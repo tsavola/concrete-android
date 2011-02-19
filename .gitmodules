@@ -1,0 +1,3 @@
+[submodule "jni/concrete"]
+	path = jni/concrete
+	url = git://github.com/tsavola/concrete.git

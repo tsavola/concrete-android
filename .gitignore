@@ -1,0 +1,7 @@
+local.mk
+local.properties
+bin/
+gen/
+libs/
+obj/
+jni/concrete-build/
