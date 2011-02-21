@@ -1,0 +1,7 @@
+Build instructions:
+
+  ./bootstrap.sh
+  echo >local.properties sdk.dir=<ANDROID-SDK>
+  echo >local.mk NDK=<ANDROID-NDK>
+  make
+
