@@ -9,10 +9,10 @@
 
 #include <concrete/context.hpp>
 #include <concrete/execute.hpp>
-#include <concrete/modules/concrete.hpp>
 #include <concrete/objects/code.hpp>
 
 #include "jni.hpp"
+#include "modules/concrete.hpp"
 
 using namespace concrete;
 
@@ -32,7 +32,7 @@ CONCRETE_ANDROID_JNICALL(jint, Act, execute)(JNIEnv *env, jobject object, jbyteA
 			while (executor.execute())
 				;
 
-			value = ConcreteModule::GetTestValue();
+			value = get_test_value();
 
 		} catch (...) {
 			// TODO
