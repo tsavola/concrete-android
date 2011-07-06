@@ -12,7 +12,7 @@ jni:: concrete
 concrete::
 	mkdir -p obj
 	ln -sf ../jni/concrete.mk obj/
-	$(MAKE) -C jni/concrete O=../../obj/concrete NDK=$(NDK)
+	$(MAKE) -C jni/concrete O=../../obj/concrete NDK=$(NDK) concrete-reloc
 
 install::
 	$(ANT) install

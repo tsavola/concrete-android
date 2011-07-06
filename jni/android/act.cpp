@@ -8,13 +8,23 @@
  */
 
 #include <concrete/context.hpp>
-#include <concrete/execute.hpp>
+#include <concrete/event.hpp>
+#include <concrete/execution.hpp>
+#include <concrete/io/resolve.hpp>
 #include <concrete/objects/code.hpp>
 
 #include "jni.hpp"
 #include "modules/concrete.hpp"
 
 using namespace concrete;
+
+class DummyResolve: public Resolve {};
+
+class DummyLoop: public EventLoop {
+public:
+	virtual void wait(const EventSource &source, unsigned int conditions, EventCallback *callback) {}
+	virtual void poll() {}
+};
 
 CONCRETE_ANDROID_JNICALL(jint, Act, execute)(JNIEnv *env, jobject object, jbyteArray array)
 {
@@ -25,12 +35,14 @@ CONCRETE_ANDROID_JNICALL(jint, Act, execute)(JNIEnv *env, jobject object, jbyteA
 		auto size = env->GetArrayLength(array);
 
 		try {
-			Context context;
-			ContextScope scope(context);
-			Executor executor(CodeObject::Load(data, size));
+			DummyLoop event_loop;
+			Context context(event_loop);
+			ScopedContext activate(context);
 
-			while (executor.execute())
-				;
+			context.add_execution(Execution::New(CodeObject::Load(data, size)));
+
+			while (context.executable())
+				context.execute();
 
 			value = get_test_value();
 
@@ -42,4 +54,18 @@ CONCRETE_ANDROID_JNICALL(jint, Act, execute)(JNIEnv *env, jobject object, jbyteA
 	}
 
 	return value;
+}
+
+void concrete::Resolve::suspend_until_resolved()
+{
+}
+
+struct addrinfo *concrete::Resolve::addrinfo()
+{
+	return NULL;
+}
+
+Resolve *concrete::ResourceCreate<Resolve>::New(const std::string &node, const std::string &service)
+{
+	return NULL;
 }
